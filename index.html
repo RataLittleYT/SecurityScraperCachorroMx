@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Security Scraper Profesional</title>
+  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgOCA4Ij48cGF0aCBmaWxsPSIjZTIwMDc0IiBkPSJtNCAwbC0uMTkuMDlsLTMuNSAxLjQ3bC0uMzEuMTNWMmMwIDEuNjYuNjcgMy4xMiAxLjQ3IDQuMTljLjQuNTMuODMuOTcgMS4yNSAxLjI4UzMuNTUgOCA0IDhjLjQ2IDAgLjg2LS4yMiAxLjI4LS41M3MuODUtLjc1IDEuMjUtMS4yOEM3LjMzIDUuMTIgOCAzLjY2IDggMnYtLjMxbC0uMzEtLjEzTDQuMTkuMDl6bTAgMS4wOVY3Yy0uMDQgMC0uMzMtLjA3LS42Ni0uMzFzLS43MS0uNjMtMS4wNi0xLjA5YTYuMjYgNi4yNiAwIDAgMS0xLjIyLTMuMjhMNCAxLjF6Ii8+PC9zdmc+">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            telekom: {
+              blue: '#0063A3',
+              magenta: '#E20074',
+              gray: '#5A6D72'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .progress-bar {
+      height: 4px;
+      background: linear-gradient(90deg, #0063A3 0%, #E20074 100%);
+      animation: progress 1.5s ease-in-out infinite;
+    }
+    @keyframes progress {
+      0% { width: 0; opacity: 0.7; }
+      100% { width: 100%; opacity: 0; }
+    }
+    .telekom-gradient {
+      background: linear-gradient(135deg, #0063A3 0%, #E20074 100%);
+    }
+  </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+  <div class="container mx-auto px-4 py-8 max-w-7xl">
+    <!-- Header -->
+    <header class="mb-10">
+      <div class="flex justify-between items-start">
+        <div>
+          <div class="flex items-center mb-2">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgOCA4Ij48cGF0aCBmaWxsPSIjZTIwMDc0IiBkPSJtNCAwbC0uMTkuMDlsLTMuNSAxLjQ3bC0uMzEuMTNWMmMwIDEuNjYuNjcgMy4xMiAxLjQ3IDQuMTljLjQuNTMuODMuOTcgMS4yNSAxLjI4UzMuNTUgOCA0IDhjLjQ2IDAgLjg2LS4yMiAxLjI4LS41M3MuODUtLjc1IDEuMjUtMS4yOEM3LjMzIDUuMTIgOCAzLjY2IDggMnYtLjMxbC0uMzEtLjEzTDQuMTkuMDl6bTAgMS4wOVY3Yy0uMDQgMC0uMzMtLjA3LS42Ni0uMzFzLS43MS0uNjMtMS4wNi0xLjA5YTYuMjYgNi4yNiAwIDAgMS0xLjIyLTMuMjhMNCAxLjF6Ii8+PC9zdmc+" alt="Logo" class="h-10 mr-4">
+            <h1 class="text-3xl font-bold text-gray-800 dark:text-white">
+              <span class="text-telekom-blue dark:text-telekom-magenta">Security Advisory</span> Scraper by CachorroMx (A.Tellez)
+            </h1>
+          </div>
+          <p class="text-gray-600 dark:text-gray-300">Herramienta profesional para análisis de vulnerabilidades</p>
+        </div>
+        <div class="flex items-center space-x-4">
+          <button id="exportBtn" class="bg-telekom-blue hover:bg-telekom-magenta text-white px-5 py-2.5 rounded-lg flex items-center transition-all duration-300">
+            <i class="fas fa-file-export mr-2"></i> Exportar
+          </button>
+          <button id="darkModeToggle" class="p-2.5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-telekom-blue hover:text-white transition-colors duration-300">
+            <i class="fas fa-moon dark:hidden"></i>
+            <i class="fas fa-sun hidden dark:block"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+      <!-- Input Section -->
+      <section class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8 border border-gray-200 dark:border-gray-700">
+        <div class="flex justify-between items-center mb-5">
+          <h2 class="text-xl font-semibold text-gray-800 dark:text-white flex items-center">
+            <i class="fas fa-link text-telekom-blue mr-3"></i> URLs a Analizar
+          </h2>
+          <button onclick="clearAll()" class="text-gray-500 hover:text-red-500 text-sm font-medium">
+            <i class="fas fa-trash-alt mr-1"></i> Limpiar
+          </button>
+        </div>
+        <textarea id="urls" rows="6" class="w-full px-5 py-4 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-telekom-blue focus:border-telekom-blue bg-white dark:bg-gray-700 text-gray-800 dark:text-white font-mono text-sm" placeholder="Ingrese URLs (Una por linea)"></textarea>
+        <div class="flex justify-between items-center mt-4">
+          <div id="urlCounter" class="text-sm text-gray-500 dark:text-gray-400">
+            <i class="fas fa-hashtag mr-1"></i> <span>0</span> URLs ingresadas
+          </div>
+          <button onclick="processUrls()" id="processBtn" class="telekom-gradient hover:opacity-90 text-white px-8 py-3 rounded-lg font-medium flex items-center transition-all duration-300 shadow-md">
+            <i class="fas fa-play mr-2"></i> Analizar URLs
+          </button>
+        </div>
+      </section>
+
+      <!-- Progress Indicator -->
+      <div id="progressContainer" class="hidden mb-8">
+        <div class="flex justify-between items-center mb-2">
+          <span id="progressText" class="text-sm font-medium text-telekom-blue dark:text-telekom-magenta"></span>
+          <span id="progressPercent" class="text-sm font-bold text-telekom-gray"></span>
+        </div>
+        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+          <div id="progressBar" class="bg-telekom-blue h-2.5 rounded-full" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <!-- Results Section -->
+      <section class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-white flex items-center">
+              <i class="fas fa-table text-telekom-blue mr-3"></i> Resultados del Análisis
+            </h2>
+            <div id="resultsSummary" class="text-sm text-gray-600 dark:text-gray-300 mt-1"></div>
+          </div>
+          <div class="flex items-center space-x-3 w-full sm:w-auto">
+            <div class="relative flex-grow sm:flex-grow-0 sm:w-64">
+              <input type="text" id="searchInput" placeholder="Buscar resultados..." class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-telekom-blue focus:border-telekom-blue">
+              <i class="fas fa-search absolute left-3 top-2.5 text-gray-400"></i>
+            </div>
+            <button id="refreshBtn" class="p-2 text-gray-500 hover:text-telekom-blue dark:hover:text-telekom-magenta rounded-lg border border-gray-300 dark:border-gray-600">
+              <i class="fas fa-sync-alt"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div id="loadingIndicator" class="hidden py-12">
+          <div class="flex flex-col items-center justify-center">
+            <div class="relative w-20 h-20 mb-4">
+              <div class="absolute inset-0 rounded-full border-4 border-t-telekom-blue border-r-telekom-magenta border-b-telekom-blue border-l-telekom-magenta animate-spin"></div>
+              <div class="absolute inset-2 rounded-full bg-telekom-blue opacity-10"></div>
+              <i class="absolute inset-0 flex items-center justify-center text-telekom-blue text-2xl fas fa-shield-alt"></i>
+            </div>
+            <p class="text-gray-500 dark:text-gray-400 font-medium">Analizando URLs...</p>
+            <div class="w-64 mt-4">
+              <div class="progress-bar rounded-full"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead class="bg-gray-50 dark:bg-gray-700">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer" onclick="sortTable(0)">
+                  <div class="flex items-center">
+                    ID <i class="fas fa-sort ml-1 opacity-0"></i>
+                  </div>
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer" onclick="sortTable(1)">
+                  <div class="flex items-center">
+                    Descripción <i class="fas fa-sort ml-1 opacity-0"></i>
+                  </div>
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer" onclick="sortTable(2)">
+                  <div class="flex items-center">
+                    Detalles <i class="fas fa-sort ml-1 opacity-0"></i>
+                  </div>
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer" onclick="sortTable(3)">
+                  <div class="flex items-center">
+                    Impacto <i class="fas fa-sort ml-1 opacity-0"></i>
+                  </div>
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer" onclick="sortTable(4)">
+                  <div class="flex items-center">
+                    Estado <i class="fas fa-sort ml-1 opacity-0"></i>
+                  </div>
+                </th>
+                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody id="resultsBody" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"></tbody>
+          </table>
+        </div>
+        
+        <div id="emptyState" class="p-12 text-center">
+          <div class="max-w-md mx-auto">
+            <i class="fas fa-table text-gray-300 dark:text-gray-600 text-5xl mb-4"></i>
+            <h3 class="text-lg font-medium text-gray-500 dark:text-gray-400">No hay resultados de análisis</h3>
+            <p class="text-gray-400 dark:text-gray-500 mt-2 mb-4">Ingresa URLs y haz clic en "Analizar URLs"</p>
+          </div>
+        </div>
+        
+        <div id="errorState" class="hidden p-12 text-center">
+          <div class="max-w-md mx-auto">
+            <i class="fas fa-exclamation-triangle text-red-500 text-5xl mb-4"></i>
+            <h3 class="text-lg font-medium text-gray-800 dark:text-white">Error en el análisis</h3>
+            <p id="errorMessage" class="text-gray-600 dark:text-gray-300 mt-2 mb-4"></p>
+            <button onclick="retryProcess()" class="bg-telekom-blue hover:bg-telekom-magenta text-white px-5 py-2.5 rounded-lg">
+              <i class="fas fa-redo mr-2"></i> Reintentar
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-16 text-center text-gray-500 dark:text-gray-400 text-sm">
+      <p>Security Scraper Profesional v4.0 | Copyright CachorroMx | A.Téllez <a href="https://discord.gg/hm8k3Cymsk"><font color="whitespace-nowrap">Contact</font></a></p>
+    </footer>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script>
+    // Estado global de la aplicación
+    const state = {
+      advisories: [],
+      currentSort: { column: 0, direction: 'asc' },
+      darkMode: localStorage.getItem('darkMode') === 'enabled'
+    };
+
+    // Inicialización
+    document.addEventListener('DOMContentLoaded', () => {
+      // Configurar modo oscuro inicial
+      if (state.darkMode) {
+        document.documentElement.classList.add('dark');
+        document.getElementById('darkModeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+      }
+
+      // Contador de URLs
+      document.getElementById('urls').addEventListener('input', updateUrlCounter);
+      
+      // Configurar eventos
+      setupEventListeners();
+    });
+
+    // Configurar event listeners
+    function setupEventListeners() {
+      // Modo oscuro
+      document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
+      
+      // Exportar datos
+      document.getElementById('exportBtn').addEventListener('click', exportData);
+      
+      // Buscar en resultados
+      document.getElementById('searchInput').addEventListener('input', searchAdvisories);
+      
+      // Botón de refrescar
+      document.getElementById('refreshBtn').addEventListener('click', () => {
+        if (state.advisories.length > 0) {
+          processUrls();
+        }
+      });
+    }
+
+    // Alternar modo oscuro
+    function toggleDarkMode() {
+      state.darkMode = !state.darkMode;
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem('darkMode', state.darkMode ? 'enabled' : 'disabled');
+      
+      // Cambiar icono
+      const icon = document.getElementById('darkModeToggle').querySelector('i');
+      if (state.darkMode) {
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+      } else {
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+      }
+    }
+
+    // Actualizar contador de URLs
+    function updateUrlCounter() {
+      const urls = document.getElementById('urls').value.trim().split('\n').filter(url => url.trim() !== '');
+      document.getElementById('urlCounter').querySelector('span').textContent = urls.length;
+    }
+
+    // Limpiar todo
+    function clearAll() {
+      document.getElementById('urls').value = '';
+      document.getElementById('resultsBody').innerHTML = '';
+      document.getElementById('emptyState').classList.remove('hidden');
+      document.getElementById('errorState').classList.add('hidden');
+      document.getElementById('resultsSummary').textContent = '';
+      document.getElementById('searchInput').value = '';
+      updateUrlCounter();
+      state.advisories = [];
+    }
+
+    // Procesar URLs
+    async function processUrls() {
+      const urls = document.getElementById('urls').value.trim().split('\n').filter(url => url.trim() !== '');
+      
+      if (urls.length === 0) {
+        showError('Por favor ingresa al menos una URL');
+        return;
+      }
+
+      // Preparar UI
+      document.getElementById('emptyState').classList.add('hidden');
+      document.getElementById('errorState').classList.add('hidden');
+      document.getElementById('loadingIndicator').classList.remove('hidden');
+      document.getElementById('resultsBody').innerHTML = '';
+      document.getElementById('processBtn').disabled = true;
+      document.getElementById('processBtn').innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Analizando...';
+      document.getElementById('progressContainer').classList.remove('hidden');
+      
+      // Procesar cada URL
+      state.advisories = [];
+      let successCount = 0;
+      
+      for (const [index, url] of urls.entries()) {
+        try {
+          // Actualizar progreso
+          const progress = Math.round(((index + 1) / urls.length) * 100);
+          updateProgress(index + 1, urls.length, progress);
+          
+          // Extraer ID de la URL
+          const advisoryId = extractAdvisoryId(url);
+          
+          // Verificar si ya tenemos este advisory
+          if (state.advisories.some(a => a.id === advisoryId)) {
+            continue;
+          }
+          
+          // Obtener datos del advisory
+          const advisory = await fetchAdvisoryData(url, advisoryId);
+          
+          if (advisory && !advisory.error) {
+            state.advisories.push(advisory);
+            successCount++;
+            
+            // Actualizar UI gradualmente
+            if (index % 2 === 0 || index === urls.length - 1) {
+              renderAdvisories();
+            }
+          }
+        } catch (error) {
+          console.error(`Error procesando URL ${url}:`, error);
+          state.advisories.push({
+            id: extractAdvisoryId(url),
+            url,
+            error: error.message
+          });
+        }
+      }
+      
+      // Finalizar
+      document.getElementById('loadingIndicator').classList.add('hidden');
+      document.getElementById('processBtn').disabled = false;
+      document.getElementById('processBtn').innerHTML = '<i class="fas fa-play mr-2"></i> Analizar URLs';
+      
+      // Mostrar resultados
+      if (successCount > 0) {
+        renderAdvisories();
+        updateResultsSummary();
+      } else {
+        showError('No se pudo obtener información de ninguna URL. Verifica las URLs e intenta nuevamente.');
+      }
+    }
+
+    // Extraer ID del advisory de la URL
+    function extractAdvisoryId(url) {
+      try {
+        const urlObj = new URL(url);
+        return urlObj.searchParams.get("name") || 
+               urlObj.searchParams.get("id") ||
+               urlObj.pathname.split('/').pop() || 
+               url.split('/').pop().split('?')[0] || 
+               'N/A';
+      } catch {
+        return url.split('/').pop().split('?')[0] || 'N/A';
+      }
+    }
+
+    // Obtener datos REALES del advisory
+    async function fetchAdvisoryData(url, advisoryId) {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 20000);
+      
+      try {
+        // Usar proxy para evitar CORS
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+        
+        const response = await fetch(proxyUrl, {
+          signal: controller.signal,
+          headers: { 
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+          }
+        });
+        
+        clearTimeout(timeout);
+        
+        if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+        
+        const data = await response.json();
+        if (!data.contents) throw new Error('No se pudo obtener el contenido');
+        
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(data.contents, 'text/html');
+        
+        // Extraer datos con selectores flexibles
+        const extractText = (selectors, isAttribute = false, attr = 'content') => {
+          for (const selector of selectors) {
+            const element = doc.querySelector(selector);
+            if (element) {
+              const content = isAttribute ? element.getAttribute(attr) : element.textContent;
+              if (content && content.trim()) return content.trim();
+            }
+          }
+          return 'No disponible';
+        };
+        
+        // Extraer todos los campos necesarios
+        return {
+          id: advisoryId,
+          url: url,
+          title: extractText(['h1', 'h2', 'title']),
+          description: extractText([
+            'div.content', 
+            'article', 
+            'section', 
+            'div.description',
+            'div[itemprop="description"]',
+            'meta[name="description"]'
+          ]),
+          details: extractText([
+            'div.details', 
+            'table', 
+            'ul', 
+            'div.technical-info'
+          ]),
+          impact: extractText([
+            'div.impact', 
+            'div.consequences',
+            'div[itemprop="impact"]'
+          ]),
+          rawHtml: data.contents // Para depuración
+        };
+        
+      } catch (error) {
+        console.error(`Error fetching advisory ${advisoryId}:`, error);
+        return {
+          id: advisoryId,
+          url: url,
+          error: error.message || 'Error al obtener datos'
+        };
+      }
+    }
+
+    // Actualizar barra de progreso
+    function updateProgress(current, total, percent) {
+      document.getElementById('progressText').textContent = `Procesando URL ${current} de ${total}`;
+      document.getElementById('progressPercent').textContent = `${percent}%`;
+      document.getElementById('progressBar').style.width = `${percent}%`;
+    }
+
+    // Mostrar resultados
+    function renderAdvisories() {
+      const resultsBody = document.getElementById('resultsBody');
+      resultsBody.innerHTML = '';
+      
+      if (state.advisories.length === 0) {
+        document.getElementById('emptyState').classList.remove('hidden');
+        return;
+      }
+      
+      state.advisories.forEach(advisory => {
+        const row = document.createElement('tr');
+        row.className = 'hover:bg-gray-50 dark:hover:bg-gray-700';
+        
+        if (advisory.error) {
+          row.innerHTML = `
+            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900 dark:text-white">
+              ${advisory.id}
+            </td>
+            <td colspan="4" class="px-6 py-4 text-red-600 dark:text-red-400">
+              Error: ${advisory.error}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+              <a href="${advisory.url}" target="_blank" class="text-gray-600 hover:text-gray-900 dark:hover:text-gray-300 mr-4">
+                <i class="fas fa-external-link-alt"></i>
+              </a>
+              <button onclick="copyToClipboard('${advisory.url}')" class="text-gray-600 hover:text-gray-900 dark:hover:text-gray-300">
+                <i class="fas fa-copy"></i>
+              </button>
+            </td>
+          `;
+        } else {
+          row.innerHTML = `
+            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900 dark:text-white">
+              ${advisory.id}
+            </td>
+            <td class="px-6 py-4 max-w-xs">
+              <div class="text-sm text-gray-900 dark:text-white font-medium">${advisory.title || 'Sin título'}</div>
+              <div class="text-sm text-gray-500 dark:text-gray-400 truncate">${advisory.description ? advisory.description.substring(0, 100) + (advisory.description.length > 100 ? '...' : '') : 'Sin descripción'}</div>
+            </td>
+            <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-300 max-w-xs">
+              ${advisory.details ? advisory.details.substring(0, 80) + (advisory.details.length > 80 ? '...' : '') : 'No disponible'}
+            </td>
+            <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-300 max-w-xs">
+              ${advisory.impact ? advisory.impact.substring(0, 80) + (advisory.impact.length > 80 ? '...' : '') : 'No disponible'}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
+                <i class="fas fa-check mr-1"></i> Éxito
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+              <a href="${advisory.url}" target="_blank" class="text-telekom-blue hover:text-telekom-magenta mr-4">
+                <i class="fas fa-external-link-alt"></i>
+              </a>
+              <button onclick="copyToClipboard('${advisory.url}')" class="text-gray-600 hover:text-gray-900 dark:hover:text-gray-300">
+                <i class="fas fa-copy"></i>
+              </button>
+            </td>
+          `;
+        }
+        
+        resultsBody.appendChild(row);
+      });
+    }
+
+    // Mostrar resumen de resultados
+    function updateResultsSummary() {
+      const successCount = state.advisories.filter(a => !a.error).length;
+      const errorCount = state.advisories.length - successCount;
+      
+      let summaryText = '';
+      if (errorCount === 0) {
+        summaryText = `<span class="text-green-600 dark:text-green-400">${successCount} URLs analizadas correctamente</span>`;
+      } else {
+        summaryText = `
+          <span class="text-green-600 dark:text-green-400">${successCount} correctas</span>, 
+          <span class="text-red-600 dark:text-red-400">${errorCount} con errores</span>
+        `;
+      }
+      
+      document.getElementById('resultsSummary').innerHTML = summaryText;
+    }
+
+    // Mostrar error
+    function showError(message) {
+      document.getElementById('errorMessage').textContent = message;
+      document.getElementById('errorState').classList.remove('hidden');
+      document.getElementById('loadingIndicator').classList.add('hidden');
+      document.getElementById('processBtn').disabled = false;
+      document.getElementById('processBtn').innerHTML = '<i class="fas fa-play mr-2"></i> Analizar URLs';
+    }
+
+    // Reintentar proceso
+    function retryProcess() {
+      document.getElementById('errorState').classList.add('hidden');
+      processUrls();
+    }
+
+    // Buscar en advisories
+    function searchAdvisories() {
+      const term = document.getElementById('searchInput').value.toLowerCase();
+      const rows = document.querySelectorAll('#resultsBody tr');
+      
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(term) ? '' : 'none';
+      });
+    }
+
+    // Ordenar tabla
+    function sortTable(columnIndex) {
+      // Determinar la dirección de ordenación
+      const direction = state.currentSort.column === columnIndex ? 
+                       (state.currentSort.direction === 'asc' ? 'desc' : 'asc') : 
+                       'asc';
+
+      // Actualizar el estado de ordenación
+      state.currentSort = { column: columnIndex, direction };
+
+      // Ordenar los advisories
+      state.advisories.sort((a, b) => {
+        // Obtener los valores a comparar
+        let valueA, valueB;
+
+        switch(columnIndex) {
+          case 0: // ID
+            valueA = a.id.toLowerCase();
+            valueB = b.id.toLowerCase();
+            break;
+          case 1: // Descripción/Título
+            valueA = (a.title || '').toLowerCase();
+            valueB = (b.title || '').toLowerCase();
+            break;
+          case 2: // Detalles
+            valueA = (a.details || '').toLowerCase();
+            valueB = (b.details || '').toLowerCase();
+            break;
+          case 3: // Impacto
+            valueA = (a.impact || '').toLowerCase();
+            valueB = (b.impact || '').toLowerCase();
+            break;
+          case 4: // Estado
+            valueA = a.error ? 0 : 1;
+            valueB = b.error ? 0 : 1;
+            break;
+          default:
+            return 0;
+        }
+
+        // Comparar los valores
+        let comparison = 0;
+        if (valueA > valueB) {
+          comparison = 1;
+        } else if (valueA < valueB) {
+          comparison = -1;
+        }
+
+        // Aplicar dirección de ordenación
+        return direction === 'desc' ? comparison * -1 : comparison;
+      });
+
+      // Actualizar iconos de ordenación
+      updateSortIcons(columnIndex, direction);
+
+      // Volver a renderizar la tabla
+      renderAdvisories();
+    }
+
+    // Actualizar iconos de ordenación
+    function updateSortIcons(columnIndex, direction) {
+      // Resetear todos los iconos
+      document.querySelectorAll('th i.fa-sort').forEach(icon => {
+        icon.classList.replace('fa-sort-up', 'fa-sort');
+        icon.classList.replace('fa-sort-down', 'fa-sort');
+        icon.classList.add('opacity-0');
+      });
+
+      // Establecer icono para la columna actual
+      const header = document.querySelectorAll('th')[columnIndex];
+      if (header) {
+        const icon = header.querySelector('i');
+        if (icon) {
+          icon.classList.remove('opacity-0');
+          if (direction === 'asc') {
+            icon.classList.replace('fa-sort', 'fa-sort-up');
+          } else {
+            icon.classList.replace('fa-sort', 'fa-sort-down');
+          }
+        }
+      }
+    }
+
+    // Copiar al portapapeles
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert('URL copiada al portapapeles');
+      }).catch(err => {
+        console.error('Error al copiar:', err);
+      });
+    }
+
+    // Exportar datos
+    function exportData() {
+      if (state.advisories.length === 0) {
+        showError('No hay datos para exportar');
+        return;
+      }
+      
+      try {
+        // Filtrar solo los datos relevantes
+        const exportData = state.advisories.map(advisory => ({
+          'ID': advisory.id,
+          'URL': advisory.url,
+          'Título': advisory.title || '',
+          'Descripción': advisory.description ? advisory.description.substring(0, 200) : '',
+          'Detalles': advisory.details ? advisory.details.substring(0, 200) : '',
+          'Impacto': advisory.impact ? advisory.impact.substring(0, 200) : '',
+          'Estado': advisory.error ? 'Error: ' + advisory.error : 'Éxito'
+        }));
+        
+        // Crear hoja de trabajo
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        
+        // Crear libro de trabajo
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Resultados");
+        
+        // Exportar
+        const date = new Date().toISOString().split('T')[0];
+        XLSX.writeFile(wb, `Resultados_Analisis_${date}.xlsx`);
+        
+        alert('Datos exportados correctamente');
+      } catch (error) {
+        console.error('Error al exportar:', error);
+        showError('Error al generar el archivo de exportación');
+      }
+    }
+  </script>
+</body>
+</html>
